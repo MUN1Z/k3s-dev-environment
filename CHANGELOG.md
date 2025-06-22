@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - ♻️ refactor(structure): organize shell scripts into scripts directory
 - 🗑️ chore(cleanup): remove duplicate readme and unused docker-compose files
+- 🔧 chore(git): add pre-commit hooks for gitflow and conventional commits with emoji
 
 ## [1.0.0] - 2025-06-21
 

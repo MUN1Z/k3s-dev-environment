@@ -1,5 +1,19 @@
 # K3s Development Environment
 
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![K3s](https://img.shields.io/badge/K3s-FFC61E?style=for-the-badge&logo=k3s&logoColor=black)](https://k3s.io/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com/)
+[![Traefik](https://img.shields.io/badge/Traefik-24A1C1?style=for-the-badge&logo=traefik&logoColor=white)](https://traefik.io/)
+[![ArgoCD](https://img.shields.io/badge/ArgoCD-EF7B4D?style=for-the-badge&logo=argo&logoColor=white)](https://argoproj.github.io/cd/)
+[![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)](https://grafana.com/)
+[![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io/)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code Quality](https://img.shields.io/badge/Code%20Quality-A+-brightgreen.svg)](https://github.com/BrewertonSantos/k3s-dev-environment)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![GitFlow](https://img.shields.io/badge/GitFlow-Enabled-blue.svg)](https://nvie.com/posts/a-successful-git-branching-model/)
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+
 A complete development environment using **Kubernetes (K3s)** with all services running as native Kubernetes deployments. This environment provides monitoring, storage, databases, and management tools for modern application development.
 
 ## 🚀 Quick Start
@@ -365,24 +379,6 @@ kubectl get ingressroutes -A
 # Verify Traefik configuration
 kubectl get svc -n traefik-system traefik
 ```
-
-## 📝 Changelog
-
-### v2.0.0 (Current) - Kubernetes-Native Environment
-- **MIGRATION**: Complete migration from Docker Compose to Kubernetes
-- **FEATURE**: Native K3s deployment with k3d cluster
-- **FEATURE**: Traefik ingress controller with domain-based routing
-- **FEATURE**: Dual access methods (domains + port forwarding)
-- **FEATURE**: Rancher integration for cluster management
-- **FEATURE**: Comprehensive monitoring with Prometheus + Grafana
-- **FEATURE**: Distributed tracing with Jaeger
-- **FEATURE**: S3-compatible storage with MinIO
-- **IMPROVEMENT**: Simplified management scripts
-- **IMPROVEMENT**: Enhanced documentation and troubleshooting
-- **SECURITY**: Proper RBAC and namespace isolation
-
-### v1.x (Deprecated)
-- Docker Compose-based environment (removed)
 
 ## 🤝 Contributing
 
