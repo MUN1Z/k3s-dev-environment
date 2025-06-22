@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - ♻️ refactor(structure): organize shell scripts into scripts directory
+- 🗑️ chore(cleanup): remove duplicate readme and unused docker-compose files
 
 ## [1.0.0] - 2025-06-21
 
@@ -29,5 +30,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🌐 Domain-based and port-forward access methods
 - ✅ Health checks and URL verification tools
 
-[Unreleased]: https://github.com/username/k3s-dev-environment/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/username/k3s-dev-environment/releases/tag/v1.0.0
+[Unreleased]: https://github.com/BrewertonSantos/k3s-dev-environment/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/BrewertonSantos/k3s-dev-environment/releases/tag/v1.0.0
