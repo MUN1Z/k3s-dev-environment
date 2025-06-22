@@ -1,0 +1,202 @@
+# GitHub Copilot Configuration for K3s Development Environment
+# Based on conversation and implementation performed
+
+project:
+  name: "K3s Development Environment"
+  type: "kubernetes-development-stack"
+  target_environment: "development"
+  
+technologies:
+  kubernetes:
+    distribution: "k3s"
+    version: "v1.30.13+k3s1"
+    cluster_tool: "k3d"
+    client: "kubectl"
+    
+  ingress:
+    controller: "traefik"
+    version: "v3.2"
+    config_type: "IngressRoute"  # NOT standard Ingress
+    domains: "*.localhost"
+    
+  gitops:
+    tool: "argocd"
+    namespace: "argocd"
+    access_mode: "insecure"  # For development behind Traefik
+    install_method: "official_manifest"
+    
+  monitoring:
+    metrics: "prometheus"
+    dashboards: "grafana" 
+    tracing: "jaeger"
+    
+  storage:
+    object_storage: "minio"
+    database: "postgresql"
+    cache: "redis"
+    
+  management:
+    k8s_ui: "rancher"
+
+file_structure:
+  scripts_directory: "/scripts"
+  manifests_directory: "/k8s-manifests"
+  config_directory: "/config"
+  docs_directory: "/docs"
+
+git_workflow:
+  branching_strategy: "gitflow"
+  branch_patterns:
+    feature: "feature/branch-name-example"
+    bugfix: "bugfix/fix-name-example"
+    hotfix: "hotfix/critical-patch"
+    release: "release/v1.0.0"
+    
+  commit_format:
+    pattern: "emoji + conventional commits"
+    examples:
+      - "🚀 feat(scope): description"
+      - "🐛 fix(scope): description" 
+      - "📝 docs(scope): description"
+      - "♻️ refactor(scope): description"
+      - "🔧 chore(scope): description"
+      
+  emoji_mapping:
+    feat: "✨"
+    fix: "🐛"
+    docs: "📝"
+    style: "🎨"
+    refactor: "♻️"
+    chore: "🔧"
+    remove: "🗑️"
+    
+  hooks:
+    pre_commit: true
+    commit_msg: true
+    post_commit: true
+    changelog_auto_update: true
+
+coding_standards:
+  shell_scripts:
+    shebang: "#!/bin/bash"
+    colors:
+      success: "GREEN='\\033[0;32m'"
+      error: "RED='\\033[0;31m'"
+      warning: "YELLOW='\\033[1;33m'"
+      reset: "NC='\\033[0m'"
+    practices:
+      - "colored_output_for_feedback"
+      - "clear_error_messages"
+      - "reusable_functions"
+      - "usage_documentation"
+      
+  kubernetes_yaml:
+    indentation: 2
+    required_labels:
+      - "app.kubernetes.io/name"
+      - "app.kubernetes.io/part-of"
+    security:
+      - "non_root_users_when_possible"
+      - "resource_limits_always"
+      - "security_context_specified"
+    naming: "descriptive_resource_names"
+
+service_configuration:
+  ports:
+    traefik_dashboard: 8888
+    grafana: 3000
+    prometheus: 9090
+    jaeger: 16686
+    minio_console: 9001
+    minio_api: 9000
+    rancher: 8443
+    argocd: 8080
+    postgresql: 5432
+    redis: 6379
+    
+  credentials_dev_only:
+    grafana: "admin/admin123"
+    minio: "minioadmin/minioadmin123"
+    rancher: "admin/admin123"
+    postgresql: "admin/admin123"
+    argocd: "admin/[generated-password]"
+    
+  access_methods:
+    primary: "domain_based"  # http://service.localhost
+    fallback: "port_forward"  # http://localhost:PORT
+    
+  domain_pattern: "http://{service}.localhost"
+  
+namespaces:
+  traefik: "traefik-system"
+  monitoring: "development"  # grafana, prometheus, jaeger
+  storage: "development"     # minio, postgresql, redis  
+  management: "cattle-system"  # rancher
+  gitops: "argocd"
+
+scripts:
+  main_management: "k3s-dev-env.sh"
+  service_status: "show-services.sh"
+  host_configuration: "setup-hosts.sh"
+  port_forwarding: "setup-port-forwards.sh"
+  url_verification: "verify-urls.sh"
+  health_check: "health-check.sh"
+  changelog_update: "update-changelog.sh"
+
+verification:
+  success_http_codes: [200, 301, 302, 307, 403, 405]
+  health_check_endpoints: true
+  service_discovery_validation: true
+
+patterns_to_avoid:
+  - docker_compose_usage  # Project migrated to K8s
+  - custom_argocd_resources  # Use official install + additional config
+  - standard_kubernetes_ingress  # Always use Traefik IngressRoutes
+  - manual_port_forwarding  # Use standardized scripts
+  - commits_without_validation  # Mandatory hooks implemented
+
+troubleshooting:
+  common_issues:
+    argocd_redirect_307: "configure_insecure_mode"
+    port_forward_fails: "check_pod_status"
+    domain_not_resolving: "run_setup_hosts_script"
+    
+development_practices:
+  documentation:
+    emoji_in_headers: true
+    code_examples_with_syntax_highlighting: true
+    troubleshooting_sections: true
+    official_documentation_links: true
+    
+  testing:
+    environment_health_checks: true
+    url_accessibility_verification: true
+    service_to_service_communication: true
+    integration_testing: true
+
+security_considerations:
+  environment_type: "development"
+  production_ready: false
+  default_credentials: true  # For convenience
+  self_signed_certificates: true
+  debug_modes_enabled: true
+  
+repository:
+  github:
+    owner: "BrewertonSantos"
+    name: "k3s-dev-environment"
+    visibility: "public"
+    community_standards:
+      code_of_conduct: true
+      security_policy: true
+      contributing_guidelines: true
+      
+changelog:
+  format: "keep_a_changelog"
+  automation: true
+  categories:
+    - "Added"
+    - "Changed" 
+    - "Removed"
+    - "Fixed"
+    - "Security"
