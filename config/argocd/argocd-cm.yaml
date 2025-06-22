@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  # General configuration
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  server.rbac.log.enforce.enable: "false"
+  policy.default: role:readonly
+  policy.csv: |
+    p, role:admin, applications, *, */*, allow
+    p, role:admin, clusters, *, *, allow
+    p, role:admin, repositories, *, *, allow
+    g, argocd-admins, role:admin
+
+  # Git repositories configuration
+  repositories: |
+    - type: git
+      url: https://github.com/argoproj/argocd-example-apps
+      name: argocd-example-apps
+    - type: git  
+      url: https://github.com/kubernetes/examples
+      name: k8s-examples
+    - type: helm
+      url: https://charts.bitnami.com/bitnami
+      name: bitnami
+
+  # Resource customizations
+  resource.customizations: |
+    argoproj.io/Rollout:
+      health.lua: |
+        hs = {}
+        if obj.status ~= nil then
+          if obj.status.replicas ~= nil and obj.status.updatedReplicas ~= nil and obj.status.readyReplicas ~= nil and obj.status.availableReplicas ~= nil then
+            if obj.status.replicas == obj.status.updatedReplicas and obj.status.replicas == obj.status.readyReplicas and obj.status.replicas == obj.status.availableReplicas then
+              hs.status = "Healthy"
+              hs.message = "Rollout is healthy"
+              return hs
+            end
+          end
+        end
+        hs.status = "Progressing"
+        hs.message = "Waiting for rollout to finish: More replicas are being updated"
+        return hs
+
+  # Server configuration
+  url: "http://argocd.k3s.local:8088"
+  
+  # Application in any namespace
+  application.namespaces: "argocd,default,kube-system"
+  
+  # Admin configuration
+  admin.enabled: "true"
+  
+  # Disable internal TLS
+  server.insecure: "true"
+  
+  # Log level
+  server.log.level: "info"
+  
+  # OIDC configuration (disabled for development)
+  oidc.config: ""
+  
+  # Help chat configuration
+  help.chatUrl: ""
+  help.chatText: "Chat"

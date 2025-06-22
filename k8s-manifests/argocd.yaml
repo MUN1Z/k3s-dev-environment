@@ -1,0 +1,28 @@
+# ArgoCD Configuration for K3s Development Environment
+# This file contains additional configuration for ArgoCD after standard installation
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-server-config
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-server-config
+    app.kubernetes.io/part-of: argocd
+data:
+  url: "http://argocd.localhost"
+  server.insecure: "true"
+  application.namespaces: "argocd,default,development"
+  
+---
+apiVersion: v1  
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cmd-params-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  server.insecure: "true"

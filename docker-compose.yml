@@ -1,0 +1,23 @@
+# Docker Compose is no longer used in this project
+# 
+# This project has been migrated to use Kubernetes (K3s) exclusively.
+# All services now run as Kubernetes deployments.
+#
+# To start the development environment, use:
+#   ./k3s-dev-env.sh start
+#
+# To clean up old Docker containers and volumes, use:
+#   ./docker-cleanup.sh
+#
+# For more information, see:
+#   - README.md
+#   - MIGRATION_GUIDE.md
+
+version: '3.8'
+
+# This file is kept for reference only
+# No services are defined here as everything runs in Kubernetes
+
+services: {}
+networks: {}
+volumes: {}

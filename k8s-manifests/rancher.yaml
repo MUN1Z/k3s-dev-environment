@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cattle-system
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tls-rancher-ingress
+  namespace: cattle-system
+type: kubernetes.io/tls
+data:
+  # Self-signed certificate for development
+  # You should replace these with proper certificates in production
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMrakNDQWVLZ0F3SUJBZ0lVTjVON25UZkZyMGhJTHdNOVNtc1FhUjRyUWE4d0RRWUpLb1pJaHZjTkFRRUwKQlFBd0ZURVRNQkVHQTFVRUF3d0tjbUZ1WTJobGNpNXNiMk5oYkRBZUZ3MHlOREV4TWpReE5UUXlNelJhRncweQpOVEV4TWpReE5UUXlNelJhTUJVeEV6QVJCZ05WQkFNTUNuSmhibU5vWlhJdWJHOWpZV3d3Z2dFaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUUMxdXVrMmNKS0RJM0Z2OE80NHpXWFlzcWdnbnN2N2RyOXIKZE9VZVdQcHlmL2V6bDdvdEFSN0ZZM29leEd5dXJwQndNbFBlR1pVZVdqZjZGa0JoQlgydVA5UDY4ZkVXaDVOQgpZZ1ZObkZPc0hxVnNOb01hN1lwV25LeG1FajVRT2J3NFhCQ3FBSTVub2RjT2tEKzVmdFQ2czA3VjYySTQ5UzhZClVOVU5EVUIvazY4WUJpRGZORyswVlZhQ2xSYlI4YWg1VGhLZWcrWUxQenBad3UrSElRR3M0QnMycU93ZFlGZ3MKSVlNNVNudnFMamRxSUNrSS9RZS95bE5vQVBmRWJyZGduNHhxNlRRMGZsVzNyWWdOV1V3Snp5YWF1aERsb2FXSApYY2g1MGRDcWZGVVhERk9GUFdnRHEvSTgzYWx1Rk4yb2V5OGFyN21SUzdSa1Z1aVlkZGhyQWdNQkFBR2pVekJSCk1CMEdBMVVkRGdRV0JCUXFPdU40dmJFalIyKzR3Y2QzT0EzakRGZmFiekFmQmdOVkhTTUVHREFXZ0JRcU91TjQKdmJFalIyKzR3Y2QzT0EzakRGZmFiekFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFBZlZEWTJGY3E3MElPckVEZ3NORHJxQTdsaUZSM3BzaE1DV0orLytaOHY3amo3TjlwM1RVeWFjeFc1ClBUWGZ5RTNtVFhPYWlCMGhrU0M5K2tqOFZNNWJOZGV3UHhtdW9CTjhYY1pvTEJDSC8rdGNmRjEyaEFNUzNPTmoKazZTc1pVSWk3SVVPMDBOZEpSOFRWZmJGQlZJc0lXUjAyzDF1YmMrcmFvSEI3MUVYdnZJbVpzK2JleVg3ZkFUWAo5Q3ovYVMzN3NsYUdlVitIRWdIcHZQcStXOWVQT0FFNGJCNnl2OFRubVF2Q2N3L3k5NDhRM2EwTVcwbnlmSEY2CllHYXM5QVhJOGlmZThRQVNqNERuYzd2YlBNNGNQOThBcjhpSVJ6WnlOWGgwcDRvS3RtcjhGdjBIM2lKdGRNWEgKOEhEeGFxaWJyaE1TbFpDNlhVN2ZnOEhJNEs4ZgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRQzF1dWsyY0pLREkzRnYKOE80NHpXWFlzcWdnbnN2N2RyOXJkT1VlV1BweWYvZXpsN290QVI3Rlkzb2V4R3l1cnBCd01sUGVHWlVlV2pmNgpGa0JoQlgydVA5UDY4ZkVXaDVOQllnVk5uRk9zSHFWc05vTWE3WXBXbkt4bUVqNVFPYnc0WEJDcUFJNW5vZGNPCmtEKzVmdFQ2czA3VjYySTQ5UzhZVU5VTkRVQi9rNjhZQmlEZk5HKzBWVmFDbFJiUjhhaDVUaEtlZytZTFB6cFoKd3UrSElRR3M0QnMycU93ZFlGZ3NJWU01U252cUxqZHFJQ2tJL1FlL3lsTm9BUGZFYnJkZ240eHE2VFEwZmxXMwpyWWdOV1V3Snp5YWF1aERsb2FXSFhjaDUwZENxZkZVWERGT0ZQV2dEcS9JODNhbHVGTjJvZXk4YXI3bVJTN1JrClZ1aVlkZGhyQWdNQkFBRUNnZ0VBWWZkRmRtRzRGY2FMOC9SeGJvY3BlbGpVMTVvSVkxR2N4L2tTVTJxNGlkTFcKRnJ0T0RBcW1LSGJtSmZIYnVqSzNkUWtPSnNuVjhweVMzWHRNdWNNdWFCU3QxRlRJYmNVV2YrckQ5anFZODJLQQpxZGJ6QUMrTUl5TlJBb1J5M3h2WmQwOERCY1JZQys2dnNWYlNxKzFGTllpZ2VBaGYxaU05L2w1K1Y2dzBid3JMCktGaCtPS1NaMTJXaklRNVBoL1YxcnViUnVOY2E5VkV2OEFKZW0rT3ZGVVN3eXM0MlNQa0xHeDVOV3h6UTZmUjEKcXpNOUQ0aUs2UndpSWwydU1jOGF1WC9aRVVGSUNDNGNIL2tjSUdQaExkcHA3SjdZeUJ1VmN0UzUySmVmKzV1SwpVdG9Hc3FVcjhWbnVydWU1VlZROWdVYmkyWWlQTG05VWVySTQxVzU1cVFLQmdRRHJwSVorL3Q1eDBONFBFU3NLCnp4WmN5NXJTckwrTzBhU2dzZ3ArKzJyZWNIbGZ6QUlsV1pFSTZCWlBKamFRQWJOdGx4NUE5NEg2NURiUHBid2sKcHJVQnBFNUZzS3Z2Z3doUkRPSDNaQUt6azNUZWdTclVYSERuaWdHanloUnRXTVh3dCtncGJOUGYzT2oyQ3BJaQpkaU9uOXlvV01OalVVK29jaVh0M3dJQ2J4UUtCZ1FERjg4VHRrVWhKaHlrNnNha1lzWWN2b1JzYVdqcTJOM1JNCkt3U0ZDeUpWR2xkSnBiYldOZWJkSDBWcnQvWC9HcFV3Y3QxVE5JNHY5ZVhQRUJwTDBBa0g5eTlqOGxLdDR6RXIKK1JUZ0xQcG9SN09KTFdqNnRYR05EMHFZTzNEUk8vWFczTElsT1N3MUJrbmxwRm04WXdBc0R0TTNreWs4SWlsMApJVks3YnFaQWd3S0JnSC96SFF3aVJEZ1F6UlN6VmQwcVpkS0hWRG1MMnFtaWJxM3EzOElIU2VBUHZlaGszbGppCkdkOFBBb0g4amR4a29wdVJGSGJZTDlXS3c4WUp6WVFadlpVOFZkK2U5bGFhQUNkYjZDS0svLzRoSjE5TjQrQ3kKWFJRNTNFSGFoWG4zRFFQY1NnQnJNYUZPYjUyVGRaSG5rOEJSSEloeGRRck5rbVVVY3QzNnExZVpBb0dBYmc0VQphTzViaGdnQUVCM0VuK0FNVHh0OElJYTgwSWNQUlEwSWtnMVV6MmVzdE1VeVcrd1dGV2o4dzlCUGlSc2pTMmx0ClVFeERINU1pYW9uZTRsV3J2L0kzckRmb2lZL0h0UkdYYmVncFFXanZxSnJPS2hWR0ZQQlJkK3VQUm9SSk5LVnAKSGhLOWNWLzh2U0hZeVpDNEFTZlI3WklLZ1RkRDB2TnphVzZGUFYwQ2dZRUE2R3J6eVlURUdZcWNMR09nZ1FqSApKOGZDSEdENWJqTjM0VmdLdHJGOXJEMU1zbXl4bVB2MEp3S1FjcVBidmJiVE1ielF6ZlBpWlJjZGJHZEVKSXJsClBxWWxheDlseTJvMlp1bS9tU2JGeDJjZHFEOU5mTUpGdTg1bmM3YlZOMlBKQmNDdnVmNGZSWFpqMmhIdzVPSkkKYlBqb2lOUkVsZTlZOGNqMnZ2eG9IYkU9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rancher
+  namespace: cattle-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rancher
+  template:
+    metadata:
+      labels:
+        app: rancher
+    spec:
+      serviceAccountName: rancher
+      containers:
+      - name: rancher
+        image: rancher/rancher:v2.8.2
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        env:
+        - name: CATTLE_BOOTSTRAP_PASSWORD
+          value: "admin123"
+        - name: CATTLE_SYSTEM_DEFAULT_REGISTRY
+          value: ""
+        - name: CATTLE_SYSTEM_CATALOG
+          value: "bundled"
+        volumeMounts:
+        - name: rancher-data
+          mountPath: /var/lib/rancher
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+      volumes:
+      - name: rancher-data
+        persistentVolumeClaim:
+          claimName: rancher-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rancher-data
+  namespace: cattle-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rancher
+  namespace: cattle-system
+spec:
+  selector:
+    app: rancher
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rancher-ingress
+  namespace: cattle-system
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`rancher.localhost`)
+    kind: Rule
+    services:
+    - name: rancher
+      port: 80
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rancher
+  namespace: cattle-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: rancher
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+- nonResourceURLs: ["*"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: rancher
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: rancher
+subjects:
+- kind: ServiceAccount
+  name: rancher
+  namespace: cattle-system

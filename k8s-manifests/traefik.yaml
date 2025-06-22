@@ -1,0 +1,184 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: traefik-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-controller
+  namespace: traefik-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: traefik-controller
+rules:
+- apiGroups: [""]
+  resources: ["services", "endpoints", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses", "ingressclasses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses/status"]
+  verbs: ["update"]
+- apiGroups: ["traefik.io"]
+  resources: ["ingressroutes", "ingressroutetcps", "ingressrouteudps", "middlewares", "middlewaretcps", "tlsoptions", "tlsstores", "traefikservices", "serverstransports", "serverstransporttcps"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: traefik-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-controller
+subjects:
+- kind: ServiceAccount
+  name: traefik-controller
+  namespace: traefik-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-config
+  namespace: traefik-system
+data:
+  traefik.yml: |
+    api:
+      dashboard: true
+      debug: true
+      insecure: true
+    entryPoints:
+      web:
+        address: ":80"
+        forwardedHeaders:
+          insecure: true
+      websecure:
+        address: ":443"
+        forwardedHeaders:
+          insecure: true
+      traefik:
+        address: ":8080"
+    providers:
+      kubernetesIngress: {}
+      kubernetesCRD:
+        allowCrossNamespace: true
+    certificatesResolvers:
+      letsencrypt:
+        acme:
+          email: admin@localhost
+          storage: /data/acme.json
+          httpChallenge:
+            entryPoint: web
+    log:
+      level: INFO
+    accessLog: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik
+  namespace: traefik-system
+  labels:
+    app: traefik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      serviceAccountName: traefik-controller
+      containers:
+      - name: traefik
+        image: traefik:v3.0
+        args:
+        - --configfile=/config/traefik.yml
+        ports:
+        - name: web
+          containerPort: 80
+        - name: websecure
+          containerPort: 443
+        - name: admin
+          containerPort: 8080
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: data
+          mountPath: /data
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "300Mi"
+            cpu: "200m"
+      volumes:
+      - name: config
+        configMap:
+          name: traefik-config
+      - name: data
+        persistentVolumeClaim:
+          claimName: traefik-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: traefik-data
+  namespace: traefik-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+  namespace: traefik-system
+spec:
+  selector:
+    app: traefik
+  ports:
+  - name: web
+    port: 80
+    targetPort: 80
+    nodePort: 30080
+  - name: websecure
+    port: 443
+    targetPort: 443
+    nodePort: 30443
+  - name: admin
+    port: 8080
+    targetPort: 8080
+    nodePort: 30808
+  type: NodePort
+  externalTrafficPolicy: Local
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: traefik-system
+spec:
+  entryPoints:
+    - traefik
+  routes:
+  - match: PathPrefix(`/`)
+    kind: Rule
+    services:
+    - name: api@internal
+      kind: TraefikService

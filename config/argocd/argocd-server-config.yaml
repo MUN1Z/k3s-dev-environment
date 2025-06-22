@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-server-config
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-server-config
+    app.kubernetes.io/part-of: argocd
+data:
+  # Server configuration
+  url: "http://argocd.k3s.local:8088"
+  
+  # Disable TLS for development
+  server.insecure: "true"
+  
+  # Enable gRPC-Web
+  server.grpc.web: "true"
+  
+  # Application configuration
+  application.namespaces: "argocd,default,kube-system"
+  
+  # Repository server configuration
+  reposerver.parallelism.limit: "0"
+  
+  # Controller configuration
+  controller.status.processors: "20"
+  controller.operation.processors: "10"
+  controller.self.heal.timeout.seconds: "5"
+  controller.repo.server.timeout.seconds: "60"
+  
+  # Resource tracking
+  application.instanceLabelKey: "argocd.argoproj.io/instance"
+  
+  # Sync configuration
+  controller.app.resync: "180"
+  
+  # Security configuration
+  server.rbac.log.enforce.enable: "false"
+  
+  # Git configuration
+  timeout.reconciliation: "180s"
+  timeout.hard.reconciliation: "0s"
+  
+  # Webhook configuration
+  webhook.github.secret: ""
+  webhook.gitlab.secret: ""
+  webhook.bitbucket.uuid: ""
+  webhook.bitbucketserver.secret: ""
+  webhook.gogs.secret: ""
+  
+  # Notification configuration
+  service.slack: ""
+  service.email: ""
+  
+  # UI configuration
+  ui.bannercontent: ""
+  ui.bannerpermanent: "false"
+  ui.bannerposition: "top"
+  
+  # Help configuration
+  help.chatUrl: ""
+  help.chatText: "Need help?"
