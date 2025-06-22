@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ♻️ refactor(structure): organize shell scripts into scripts directory
 - 🗑️ chore(cleanup): remove duplicate readme and unused docker-compose files
 - 🔧 chore(git): add pre-commit hooks for gitflow and conventional commits with emoji
+- 📝 docs(changelog): update repository URLs to correct GitHub repo
+- 📝 docs(readme): add badges, remove changelog section, add code of conduct and security policy
 
 ## [1.0.0] - 2025-06-21
 

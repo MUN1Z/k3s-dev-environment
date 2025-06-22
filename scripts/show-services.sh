@@ -33,10 +33,10 @@ echo "• Prometheus:        http://prometheus.localhost"
 echo "• Jaeger Tracing:    http://jaeger.localhost"
 echo "• MinIO Console:     http://minio.localhost"
 echo "• MinIO API:         http://minio-api.localhost"
-echo "• Rancher:           http://rancher.localhost"
 echo "• ArgoCD:            http://argocd.localhost"
+echo "• Rancher:           https://rancher.localhost"
 echo
-echo -e "${BLUE}Option 2: Port Forwarding (if domains don't work)${NC}"
+echo -e "${BLUE}Option 2: Port Forwarding (alternative for Rancher)${NC}"
 echo "Run './setup-port-forwards.sh', then access:"
 echo "• Traefik Dashboard:  http://localhost:8888"
 echo "• Grafana:           http://localhost:3000"
@@ -56,6 +56,10 @@ echo "• Grafana:           admin / admin123"
 echo "• MinIO:             minioadmin / minioadmin123"
 echo "• Rancher:           admin / admin123"
 echo "• ArgoCD:            admin / $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" 2>/dev/null | base64 -d || echo "admin123")"
+echo
+echo -e "${BLUE}💡 Note: Rancher is accessible via both domain and port forwarding${NC}"
+echo -e "${BLUE}   Primary access: https://rancher.localhost (requires hosts file setup)${NC}"
+echo -e "${BLUE}   Alternative: https://localhost:8443 (via port forwarding)${NC}"
 echo
 
 echo -e "${GREEN}✅ All services are running with ingress configured!${NC}"

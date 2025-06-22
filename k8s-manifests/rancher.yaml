@@ -44,6 +44,12 @@ spec:
           value: ""
         - name: CATTLE_SYSTEM_CATALOG
           value: "bundled"
+        - name: CATTLE_SERVER_URL
+          value: "https://rancher.localhost"
+        - name: CATTLE_TLS_MIN_VERSION
+          value: ""
+        - name: CATTLE_AGENT_IMAGE
+          value: "rancher/rancher-agent:v2.8.2"
         volumeMounts:
         - name: rancher-data
           mountPath: /var/lib/rancher
@@ -89,6 +95,16 @@ spec:
   type: ClusterIP
 ---
 apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: rancher-https-redirect
+  namespace: cattle-system
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: rancher-ingress
@@ -99,9 +115,27 @@ spec:
   routes:
   - match: Host(`rancher.localhost`)
     kind: Rule
+    middlewares:
+    - name: rancher-https-redirect
     services:
     - name: rancher
       port: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: rancher-ingress-tls
+  namespace: cattle-system
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: HostSNI(`rancher.localhost`)
+    services:
+    - name: rancher
+      port: 443
+  tls:
+    passthrough: true
 ---
 apiVersion: v1
 kind: ServiceAccount
