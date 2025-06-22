@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- 🚀 feat(initial): add complete k3s development environment with argocd integration
+
 ## [1.0.0] - 2025-06-21
 
 ### Added
