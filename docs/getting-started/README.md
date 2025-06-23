@@ -313,11 +313,23 @@ After successful setup:
 
 ## 📚 Additional Resources
 
+### External Documentation
 - [K3s Documentation](https://docs.k3s.io/)
 - [K3d Documentation](https://k3d.io/)
 - [Rancher Documentation](https://rancher.com/docs/)
 - [Traefik Documentation](https://doc.traefik.io/traefik/)
 - [Prometheus Documentation](https://prometheus.io/docs/)
 - [Grafana Documentation](https://grafana.com/docs/)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 
-For more detailed information, check the specific documentation for each component in the `docs/` directory.
+### Environment-Specific Documentation
+For detailed configuration and usage guides specific to this environment, check the `docs/` directory:
+
+- **Architecture**: `docs/architecture/README.md` - System architecture and design
+- **ArgoCD**: `docs/argocd/README.md` - GitOps and deployment automation
+- **Grafana**: `docs/grafana/README.md` - Monitoring dashboards and visualization
+- **OpenSearch**: `docs/opensearch/README.md` - Log management and search
+- **PostgreSQL**: `docs/postgresql/README.md` - Database management and integration
+- **Prometheus**: `docs/prometheus/README.md` - Metrics collection and monitoring
+- **Rancher**: `docs/rancher/README.md` - Kubernetes cluster management
+- **Traefik**: `docs/traefik/README.md` - Ingress controller and load balancing

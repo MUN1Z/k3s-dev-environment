@@ -54,6 +54,12 @@ graph TB
                     OPENSEARCH_DASH[OpenSearch Dashboard<br/>172.30.40.20<br/>Log Visualization<br/>Queries<br/>Analytics]
                 end
                 
+                subgraph "Data Services - 172.30.50.0/24"
+                    POSTGRES[PostgreSQL v15<br/>172.30.50.10<br/>Relational Database<br/>ACID Compliance<br/>Application Data]
+                    REDIS[Redis v7<br/>172.30.50.20<br/>In-Memory Cache<br/>Session Storage<br/>Message Broker]
+                    MINIO[MinIO<br/>172.30.50.30<br/>S3-Compatible Storage<br/>Object Storage<br/>File Management]
+                end
+                
                 subgraph "Load Balancer Pool - 172.30.255.0/24"
                     METALLB_POOL[MetalLB IP Pool<br/>172.30.255.10-100<br/>Layer 2 Advertisement<br/>Service Load Balancing]
                 end
@@ -246,6 +252,7 @@ graph TB
             KUBECONFIG[kubeconfig/]
             MONITORING_DATA[prometheus/<br/>grafana/]
             LOGGING_DATA[opensearch/]
+            DATA_SERVICES[postgres/<br/>redis/<br/>minio/]
             INFRA_DATA[rancher/<br/>traefik/]
         end
         
@@ -266,6 +273,7 @@ graph TB
     K3S_DATA --> BIND_MOUNTS
     MONITORING_DATA --> BIND_MOUNTS
     LOGGING_DATA --> BIND_MOUNTS
+    DATA_SERVICES --> BIND_MOUNTS
     INFRA_DATA --> BIND_MOUNTS
     CONFIGS --> BIND_MOUNTS
 ```
