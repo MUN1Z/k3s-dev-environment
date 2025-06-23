@@ -27,6 +27,7 @@ graph TB
             HTTP_EP[HTTP Entry Point<br/>:80]
             HTTPS_EP[HTTPS Entry Point<br/>:443]
             DASHBOARD_EP[Dashboard Entry Point<br/>:8080]
+            POSTGRES_EP[PostgreSQL TCP Entry Point<br/>:5432]
         end
         
         subgraph "Routing Engine"
@@ -124,6 +125,7 @@ traefik:
     - --entrypoints.web.address=:80
     - --entrypoints.websecure.address=:443
     - --entrypoints.traefik.address=:8080
+    - --entrypoints.postgres.address=:5432
     
     # Certificate Resolvers
     - --certificatesresolvers.letsencrypt.acme.email=brewerton.santos@icloud.com
@@ -194,6 +196,43 @@ spec:
   - hosts:
     - app.dev
     secretName: app-tls
+```
+
+### TCP Ingress (PostgreSQL)
+
+For TCP services like databases, Traefik supports TCP routing using IngressRouteTCP:
+
+```yaml
+# Example: PostgreSQL TCP Ingress
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: postgres-tcp
+  namespace: development
+spec:
+  entryPoints:
+    - postgres
+  routes:
+  - match: HostSNI(`*`)
+    services:
+    - name: postgres
+      port: 5432
+```
+
+#### TCP Routing Features
+
+- **Direct TCP Proxying**: No HTTP protocol overhead
+- **HostSNI Matching**: Route based on Server Name Indication
+- **Load Balancing**: Multiple backend support
+- **Cross-Namespace**: Services can be in different namespaces
+
+#### Usage Example
+
+```bash
+# Connect directly to PostgreSQL via Traefik
+psql -h 127.0.0.1 -p 5432 -U admin -d devdb
+
+# No kubectl port-forward required!
 ```
 
 ### Traefik IngressRoute (CRD)
@@ -620,7 +659,21 @@ traefik:
 4. **Backup**: Regular backup of configuration and certificates
 5. **Documentation**: Maintain up-to-date routing documentation
 
-## 📖 Additional Resources
+## � Session Files and Specialized Documentation
+
+### TCP Ingress for PostgreSQL
+**File**: `docs/traefik/tcp-ingress-postgresql.md`
+- TCP Ingress configuration overview
+- PostgreSQL database access via Traefik
+- Connection examples and verification
+
+### Quick Start Session
+**File**: `docs/traefik/sessions/quick-start.md`
+- Basic Traefik setup and configuration
+- Creating first ingress routes
+- Common troubleshooting steps
+
+## �📖 Additional Resources
 
 - [Traefik Documentation](https://doc.traefik.io/traefik/)
 - [Kubernetes Integration](https://doc.traefik.io/traefik/providers/kubernetes-crd/)
