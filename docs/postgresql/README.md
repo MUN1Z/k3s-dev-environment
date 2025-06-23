@@ -311,7 +311,7 @@ pgAdmin4 is pre-configured with the local PostgreSQL server connection:
 #### Access Credentials
 
 - **URL**: `http://postgres.localhost`
-- **Email**: `admin@localhost.local`
+- **Email**: `admin@local.com`
 - **Password**: `1q2w3e4r@123`
 - **PostgreSQL Connection**: Pre-configured (password required on first use)
 
@@ -324,7 +324,7 @@ pgAdmin4 is pre-configured with the local PostgreSQL server connection:
 ```bash
 # Access pgAdmin4 via web browser
 # URL: http://postgres.localhost
-# Email: admin@localhost.local
+# Email: admin@local.com
 # Password: 1q2w3e4r@123
 
 # Pre-configured server connection available
@@ -406,7 +406,7 @@ kubectl exec -it -n development deployment/postgres -- pg_isready -U admin
 
 # Access pgAdmin4 web interface
 echo "pgAdmin4 URL: http://postgres.localhost"
-echo "Login: admin@localhost.local / 1q2w3e4r@123"
+echo "Login: admin@local.com / 1q2w3e4r@123"
 ```
 
 ## �️ pgAdmin4 Web Interface
@@ -432,7 +432,7 @@ pgAdmin4 provides a comprehensive web-based administration interface for Postgre
 
 1. Open your web browser and navigate to `http://postgres.localhost`
 2. Login with the following credentials:
-   - **Email**: `admin@localhost.local`
+   - **Email**: `admin@local.com`
    - **Password**: `1q2w3e4r@123`
 
 #### Connecting to PostgreSQL
@@ -489,7 +489,7 @@ The pgAdmin4 deployment uses the following configuration:
 ```yaml
 env:
 - name: PGADMIN_DEFAULT_EMAIL
-  value: "admin@localhost.local"
+  value: "admin@local.com"
 - name: PGADMIN_DEFAULT_PASSWORD
   value: "1q2w3e4r@123"
 - name: PGADMIN_CONFIG_LOGIN_BANNER

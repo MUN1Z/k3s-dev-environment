@@ -55,7 +55,7 @@ spec:
         image: dpage/pgadmin4:8.0
         env:
         - name: PGADMIN_DEFAULT_EMAIL
-          value: "admin@localhost.local"
+          value: "admin@local.com"
         - name: PGADMIN_DEFAULT_PASSWORD
           value: "1q2w3e4r@123"
         - name: PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION
