@@ -1,0 +1,153 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-config
+  namespace: development
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "Local PostgreSQL",
+          "Group": "Servers",
+          "Host": "postgres.development.svc.cluster.local",
+          "Port": 5432,
+          "MaintenanceDB": "devdb",
+          "Username": "admin",
+          "SSLMode": "prefer",
+          "SSLCert": "<STORAGE_DIR>/.postgresql/postgresql.crt",
+          "SSLKey": "<STORAGE_DIR>/.postgresql/postgresql.key",
+          "SSLCompression": 0,
+          "Timeout": 10,
+          "UseSSHTunnel": 0,
+          "TunnelHost": "",
+          "TunnelPort": "22",
+          "TunnelUsername": "",
+          "TunnelAuthentication": 0
+        }
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  namespace: development
+  labels:
+    app: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      containers:
+      - name: pgadmin
+        image: dpage/pgadmin4:8.0
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: "admin@localhost.local"
+        - name: PGADMIN_DEFAULT_PASSWORD
+          value: "1q2w3e4r@123"
+        - name: PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION
+          value: "True"
+        - name: PGADMIN_CONFIG_LOGIN_BANNER
+          value: '"PostgreSQL Admin - K3s Development Environment"'
+        - name: PGADMIN_CONFIG_CONSOLE_LOG_LEVEL
+          value: "10"
+        - name: PGADMIN_LISTEN_PORT
+          value: "80"
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - name: pgadmin-storage
+          mountPath: /var/lib/pgadmin
+        - name: pgadmin-config
+          mountPath: /pgadmin4/servers.json
+          subPath: servers.json
+          readOnly: true
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "300m"
+        livenessProbe:
+          httpGet:
+            path: /misc/ping
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /misc/ping
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: pgadmin-storage
+        persistentVolumeClaim:
+          claimName: pgadmin-pvc
+      - name: pgadmin-config
+        configMap:
+          name: pgadmin-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+  namespace: development
+  labels:
+    app: pgadmin
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: pgadmin
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pgadmin-pvc
+  namespace: development
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: pgadmin-ingress
+  namespace: development
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`postgres.localhost`)
+    kind: Rule
+    services:
+    - name: pgadmin
+      port: 80
