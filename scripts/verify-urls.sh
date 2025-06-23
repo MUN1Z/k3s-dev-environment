@@ -37,6 +37,35 @@ test_url() {
     fi
 }
 
+# Function to test TCP connection
+test_tcp() {
+    local host=$1
+    local port=$2
+    local name=$3
+    
+    printf "Testing %-25s " "$name:"
+    
+    # Test TCP connectivity
+    if command -v nc >/dev/null 2>&1; then
+        if nc -z -w5 "$host" "$port" 2>/dev/null; then
+            echo -e "${GREEN}✅ OK (TCP)${NC}"
+            return 0
+        else
+            echo -e "${RED}❌ Failed (TCP)${NC}"
+            return 1
+        fi
+    else
+        # Fallback to telnet if nc is not available
+        if timeout 5 bash -c "</dev/tcp/$host/$port" 2>/dev/null; then
+            echo -e "${GREEN}✅ OK (TCP)${NC}"
+            return 0
+        else
+            echo -e "${RED}❌ Failed (TCP)${NC}"
+            return 1
+        fi
+    fi
+}
+
 echo "🌐 Testing Domain Access (requires ./setup-hosts.sh):"
 echo "---------------------------------------------------"
 
@@ -49,6 +78,7 @@ test_url "http://minio.localhost" "MinIO Console"
 test_url "http://minio-api.localhost" "MinIO API"
 test_url "http://argocd.localhost" "ArgoCD"
 test_url "https://rancher.localhost" "Rancher"
+test_url "http://postgres.localhost" "pgAdmin4"
 
 echo
 echo "🔌 Testing Port Forward Access (requires ./setup-port-forwards.sh):"
@@ -64,11 +94,31 @@ test_url "http://localhost:9000" "MinIO API (9000)"
 test_url "http://localhost:8080" "ArgoCD (8080)" 
 
 echo
+echo "🗄️  Testing TCP Services (Database Access):"
+echo "--------------------------------------------"
+
+# Test TCP services
+test_tcp "127.0.0.1" "5432" "PostgreSQL (Direct)"
+
+echo
+echo "🐘 Testing pgAdmin4 Functionality:"
+echo "----------------------------------"
+
+# Test pgAdmin4 login page
+test_url "http://postgres.localhost/login" "pgAdmin4 Login Page"
+
+# Test pgAdmin4 ping endpoint (health check)
+test_url "http://postgres.localhost/misc/ping" "pgAdmin4 Health Check"
+
+echo
 echo " Notes:"
 echo "• Domain access requires: ./setup-hosts.sh"
 echo "• Port forward access requires: ./setup-port-forwards.sh"
+echo "• PostgreSQL direct access via Traefik TCP Ingress (no port-forward needed)"
+echo "• pgAdmin4 available at: http://postgres.localhost (admin@localhost.local / 1q2w3e4r@123)"
+echo "• PostgreSQL direct connection: psql -h 127.0.0.1 -p 5432 -U admin -d devdb"
 echo "• 200, 301, 302, 307, 403, 405 response codes are considered successful"
-echo "• Database services (PostgreSQL:5432, Redis:6379) require port forwarding"
+echo "• Database services (Redis:6379) require port forwarding"
 echo
 echo "📖 For complete documentation see:"
 echo "• README.md - Complete setup guide"
