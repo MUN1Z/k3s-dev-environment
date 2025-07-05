@@ -257,8 +257,8 @@ start_environment() {
     cleanup_docker_compose
     create_k3s_cluster
     wait_for_cluster
-    deploy_traefik
     deploy_applications
+    deploy_traefik
     deploy_rancher
     deploy_argocd
     deploy_ingress
