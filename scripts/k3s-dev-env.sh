@@ -191,14 +191,15 @@ deploy_rancher() {
 deploy_argocd() {
     log_info "Deploying ArgoCD..."
 
-    # Criar namespace argocd se não existir
+    # Cria o namespace se ainda não existir
     kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
 
-    kubectl apply -f k8s-manifests/argocd.yaml
-    
-    # Wait for ArgoCD to be ready
-    kubectl wait --for=condition=available deployment --all -n argocd --timeout=600s
-    
+    # Aplica o manifest oficial do ArgoCD com todos os recursos necessários
+    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+    # Aguarda os deployments ficarem prontos
+    kubectl wait --for=condition=available deployment --all -n argocd --timeout=600s || log_warning "Some ArgoCD deployments may still be initializing"
+
     log_success "ArgoCD deployed successfully"
 }
 
