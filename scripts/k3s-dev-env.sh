@@ -190,7 +190,10 @@ deploy_rancher() {
 
 deploy_argocd() {
     log_info "Deploying ArgoCD..."
-    
+
+    # Criar namespace argocd se não existir
+    kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+
     kubectl apply -f k8s-manifests/argocd.yaml
     
     # Wait for ArgoCD to be ready

@@ -139,6 +139,10 @@ k3s-dev-environment/
 
 1. **Install dependencies**:
    ```bash
+   # Install docker (if not already installed)
+   # macOS: See https://docs.docker.com/desktop/setup/install/mac-install/
+   # Linux: See https://docs.docker.com/engine/install/ubuntu/
+
    # Install k3d
    curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
    
